@@ -1,0 +1,4 @@
+rootProject.name = 'mail-mock'
+
+include 'mail-mock-r'
+include 'mail-mock-m'

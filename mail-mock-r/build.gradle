@@ -1,0 +1,21 @@
+task build(type: Exec) {
+    // installReact should be run prior to this task
+    dependsOn "installReact"
+    // Add task to the standard build group
+    group = BasePlugin.BUILD_GROUP
+    // ng doesn't exist as a file in windows -> ng.cmd
+    if (System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
+        commandLine "npm.cmd", "run", "build"
+    } else {
+        commandLine "npm", "run", "build"
+    }
+}
+
+task installReact(type: Exec) {
+    group = BasePlugin.BUILD_GROUP
+    if (System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
+        commandLine "npm.cmd", "install"
+    } else {
+        commandLine "npm", "install"
+    }
+}

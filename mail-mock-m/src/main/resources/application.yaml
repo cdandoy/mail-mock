@@ -1,0 +1,11 @@
+micronaut:
+  application:
+    name: mail-mock
+  server:
+    port: 8080
+  router:
+    static-resources:
+      default:
+        enabled: true
+        mapping: "/**"
+        paths: "file:/home/app/r"
