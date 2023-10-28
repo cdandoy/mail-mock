@@ -74,5 +74,5 @@ dockerBuild {
     dependsOn('copyClientResources')
     mustRunAfter "copyClientResources"
     inputDir = project.buildDir // See https://github.com/micronaut-projects/micronaut-gradle-plugin/issues/214
-    images = ["cdandoy/mail-mock:$project.version"]
+    images = ["cdandoy/mail-mock:$project.version", "cdandoy/mail-mock:latest"]
 }
