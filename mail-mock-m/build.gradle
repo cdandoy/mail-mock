@@ -1,0 +1,78 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.micronaut.application") version "4.0.4"
+    id("io.micronaut.aot") version "4.0.4"
+}
+
+version mailmockVersion
+group = "org.dandoy.mm"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micronaut:micronaut-websocket")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    implementation("jakarta.annotation:jakarta.annotation-api")
+    compileOnly("io.micronaut:micronaut-http-client")
+    compileOnly("org.projectlombok:lombok")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.yaml:snakeyaml")
+    implementation("com.icegreen:greenmail:2.0.0")
+
+    testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+    testCompileOnly("org.projectlombok:lombok")
+    testImplementation 'commons-io:commons-io:2.14.0'
+    testImplementation 'org.apache.commons:commons-email:1.5'
+}
+
+
+application {
+    mainClass.set("org.dandoy.mm.Application")
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
+}
+
+graalvmNative.toolchainDetection = false
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("org.dandoy.mm.*")
+    }
+    aot {
+        // Please review carefully the optimizations enabled below
+        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
+        optimizeServiceLoading = false
+        convertYamlToJava = false
+        precomputeOperations = true
+        cacheEnvironment = true
+        optimizeClassLoading = true
+        deduceEnvironment = true
+        optimizeNetty = true
+    }
+}
+
+task('copyClientResources', type: Copy) {
+    dependsOn(':mail-mock-r:build')
+    mustRunAfter(':mail-mock-r:build')
+    mustRunAfter('buildLayers')
+    from "${project(":mail-mock-r").buildDir}"
+    into "${project(':mail-mock-m').buildDir}/docker/main/layers/r"
+}
+
+dockerBuild {
+    dependsOn('copyClientResources')
+    mustRunAfter "copyClientResources"
+    inputDir = project.buildDir // See https://github.com/micronaut-projects/micronaut-gradle-plugin/issues/214
+    images = ["cdandoy/mail-mock:$project.version"]
+}
