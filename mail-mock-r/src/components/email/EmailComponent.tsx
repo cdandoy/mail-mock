@@ -11,7 +11,7 @@ interface EmailToolbarProps {
 }
 
 function EmailToolbar({messageId, handleTrash}: EmailToolbarProps) {
-    const prefix = document.URL.startsWith("http://localhost:3000") ? "http://localhost:8080" : "";
+    const prefix = document.URL.startsWith("http://localhost:3000") ? `http://localhost:${process.env.REACT_APP_MM_BACKEND_PORT}` : "";
     const contentUrl = `${prefix}/emails/content/${(encodeURIComponent(messageId))}`;
 
     return (
@@ -67,7 +67,7 @@ export function EmailComponent() {
     }
 
     function attachmentUrl(messageId: string, filename: string) {
-        const prefix = document.URL.startsWith("http://localhost:3000") ? "http://localhost:8080" : "";
+        const prefix = document.URL.startsWith("http://localhost:3000") ? `http://localhost:${process.env.REACT_APP_MM_BACKEND_PORT}` : "";
         return `${prefix}/emails/attachment/${(encodeURIComponent(messageId))}/${(encodeURIComponent(filename))}`;
     }
 

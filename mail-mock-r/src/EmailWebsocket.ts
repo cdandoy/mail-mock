@@ -10,6 +10,7 @@ export const WebSocketStateContext = React.createContext<EmailWebsocketState>({
 });
 
 export function useEmailWebsocket(): EmailWebsocketState {
+    const backendPort = process.env.REACT_APP_MM_BACKEND_PORT;
     const [unseen, setUnseen] = useState(0);
     const {lastMessage} = useWebSocket(
         getWebsocketUrl(),
@@ -26,7 +27,7 @@ export function useEmailWebsocket(): EmailWebsocketState {
         const hostname = url.hostname;
         const port = url.port;
         if (hostname === 'localhost' && port === '3000') {
-            return 'ws://localhost:7015/ws/emails'
+            return `ws://localhost:${backendPort}/ws/emails`
         } else {
             return `ws://${hostname}:${port}/ws/emails`
         }

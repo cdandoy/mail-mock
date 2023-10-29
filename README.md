@@ -13,14 +13,12 @@ This is typically used by developers and QA engineers to visualize the emails se
 
 ## Port numbers
 
-By default, MailMock runs the web application on port 8080 which may be where your custom application also runs.
-This is why in the examples below, the port 8080 is redirected to port 6509. You can of course redirect it to any port you want.
-
+The Web application is hosted on port 7015.
 The email server accepts connections on the standard ports:
 
 | Protocol     | Default Port |
 |--------------|--------------|
-| Email client | 8080         |
+| Email client | 7015         |
 | SMTP         | 25           |
 | SMTPS        | 465          |
 | POP3         | 110          |
@@ -30,8 +28,8 @@ The email server accepts connections on the standard ports:
 
 ## MailMock in Docker
 
-* Run MailMock: `docker run -p 6509:8080 -p 25:25 cdandoy/mail-mock`
-* Open the email client: [http://localhost:6509/](http://localhost:6509/)
+* Run MailMock: `docker run -p 7015:7015 -p 25:25 cdandoy/mail-mock`
+* Open the email client: [http://localhost:7015/](http://localhost:7015/)
 * Configure your application to send emails to the SMTP port:
 
 ```
@@ -48,7 +46,7 @@ services:
   email:
     image: "cdandoy/mail-mock:latest"
     ports:
-      - "6509:8080"  # HTTP
+      - "7015:7015"  # HTTP
       - "25:25"      # SMTP       
 #      - "465:465"   # SMTPS
 #      - "110:110"   # POP3
