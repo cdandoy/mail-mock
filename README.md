@@ -1,11 +1,13 @@
 <h1>
-<img style="vertical-align: middle" src="https://raw.githubusercontent.com/cdandoy/mail-mock/master/site/rabbit.webp" alt="logo" width="64px"/>
+<img style="vertical-align: middle" src="mail-mock-r/public/logo192.png" alt="logo" width="64px"/>
 MailMock - Fake Email server and client.
 </h1>
 
 MailMock is an email server and a Web based email client running in a Docker image.
 
 This is typically used by developers and QA engineers to visualize the emails sent by their application.
+
+<img src="site/screenshot1.png" alt="screenshot">
 
 ## Port numbers
 
@@ -44,13 +46,12 @@ services:
   email:
     image: "cdandoy/mail-mock:latest"
     ports:
-      - "6509:8080"
-      - '25:25'
-      - '465:465'
-      - '110:110'
-      - '995:995'
-      - '143:143'
-      - '993:993'
+      - "6509:8080"  # HTTP
+      - "25:25"      # SMTP       
+#      - "465:465"   # SMTPS
+#      - "110:110"   # POP3
+#      - "995:995"   # POP3S
+#      - "143:143"   # IMAP
+#      - "993:993"   # IMAPS
 ```
-
 
