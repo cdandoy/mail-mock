@@ -21,8 +21,8 @@ public abstract class Page<SELF> {
         this(page.webDriver);
     }
 
+    @SuppressWarnings("unchecked")
     protected SELF self() {
-        //noinspection unchecked
         return (SELF) this;
     }
 

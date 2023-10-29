@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
 import java.util.function.Consumer;
 
 public class InboxPage extends Page<InboxPage> {
-    private InboxPage(WebDriver webDriver) {
+    InboxPage(WebDriver webDriver) {
         super(webDriver);
     }
 
@@ -18,8 +18,8 @@ public class InboxPage extends Page<InboxPage> {
         super(page);
     }
 
-    public static InboxPage go() {
-        WebDriver webDriver = IntegDriver.go("/");
+    public static InboxPage go(String host, int port) {
+        WebDriver webDriver = IntegDriver.go(host, port, "/");
         return new InboxPage(webDriver);
     }
 

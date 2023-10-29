@@ -19,11 +19,6 @@ public class EmailSender {
         this.multipart = multipart;
     }
 
-    public static EmailSender build() {
-        Session session = EmailSessionBuilder.getDefaultSession();
-        return build(session);
-    }
-
     @SneakyThrows
     public static EmailSender build(Session session) {
         Multipart multipart = new MimeMultipart();

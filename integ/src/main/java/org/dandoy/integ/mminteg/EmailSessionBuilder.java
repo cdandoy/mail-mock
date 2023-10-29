@@ -24,6 +24,10 @@ public class EmailSessionBuilder {
     public EmailSessionBuilder() {
     }
 
+    public static EmailSessionBuilder builder() {
+        return new EmailSessionBuilder();
+    }
+
     public Session build() {
         Properties props = new Properties();
         props.put("mail.smtp.host", host);

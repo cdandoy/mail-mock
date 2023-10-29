@@ -7,7 +7,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class IntegDriver {
     private static WebDriver webDriver;
-    private static final String BASE_URL = "http://localhost:3000";
 
     public static synchronized WebDriver getWebDriver() {
         if (webDriver == null) {
@@ -27,9 +26,12 @@ public class IntegDriver {
         return webDriver;
     }
 
-    public static WebDriver go(String url) {
+    public static WebDriver go(String host, int port, String path) {
+        if (path.startsWith("/")) path = path.substring(1);
+
+        String url = "http://%s:%d/%s".formatted(host, port, path);
         WebDriver webDriver = getWebDriver();
-        webDriver.get(BASE_URL + url);
+        webDriver.get(url);
         return webDriver;
     }
 }
