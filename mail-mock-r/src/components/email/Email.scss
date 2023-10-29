@@ -2,9 +2,20 @@
   padding: 16px;
 
   .email-toolbar {
-    margin-bottom: 1em;
-    a, button {
-      margin-right: 8px;
+    display: flex;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+
+    .email-toolbar-start {
+      flex-grow: 1;
+
+      a, button {
+        margin-right: 8px;
+      }
+    }
+
+    .email-toolbar-end {
     }
   }
 

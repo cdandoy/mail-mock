@@ -5,6 +5,34 @@ import './Email.scss'
 import {Email} from "../../model";
 import {Button} from "react-bootstrap";
 
+interface EmailToolbarProps {
+    messageId: string,
+    handleTrash: React.MouseEventHandler<HTMLButtonElement>
+}
+
+function EmailToolbar({messageId, handleTrash}: EmailToolbarProps) {
+    const prefix = document.URL.startsWith("http://localhost:3000") ? "http://localhost:8080" : "";
+    const contentUrl = `${prefix}/emails/content/${(encodeURIComponent(messageId))}`;
+
+    return (
+        <div className={"email-toolbar"}>
+            <div className={"email-toolbar-start"}>
+                <Button href="#/" variant={"light"} size={"sm"} title={"Inbox"}>
+                    <i className={"fa fa-fw fa-arrow-left"}/>
+                </Button>
+                <Button variant={"light"} size={"sm"} onClick={handleTrash} title={"Delete"}>
+                    <i className={"fa fa-fw fa-trash"}/>
+                </Button>
+            </div>
+            <div className={"email-toolbar-end"}>
+                <Button href={contentUrl} variant={"light"} size={"sm"} title={"Download Content"}>
+                    <i className={"fa fa-fw fa-download"}/>
+                </Button>
+            </div>
+        </div>
+    )
+}
+
 export function EmailComponent() {
     let {messageId} = useParams();
     const navigate = useNavigate();
@@ -26,7 +54,7 @@ export function EmailComponent() {
             .catch(() => {
                 console.error('Failed')
             })
-    }, []);
+    }, [messageId]);
 
     function emailAddress(address: string) {
         return <span key={address}>{address}</span>;
@@ -39,7 +67,7 @@ export function EmailComponent() {
     }
 
     function attachmentUrl(messageId: string, filename: string) {
-        const prefix = document.URL.startsWith("http://localhost:3000") ? "http://localhost:7015" : "";
+        const prefix = document.URL.startsWith("http://localhost:3000") ? "http://localhost:8080" : "";
         return `${prefix}/emails/attachment/${(encodeURIComponent(messageId))}/${(encodeURIComponent(filename))}`;
     }
 
@@ -50,14 +78,7 @@ export function EmailComponent() {
         <>
             {error && <div className={"alert alert-danger"}>{error}</div>}
             <div id={"email"}>
-                <div className={"email-toolbar"}>
-                    <Button href="#/" variant={"secondary"} size={"sm"}>
-                        <i className={"fa fa-fw fa-arrow-left"}/>
-                    </Button>
-                    <Button variant={"danger"} size={"sm"} onClick={handleTrash}>
-                        <i className={"fa fa-fw fa-trash"}/>
-                    </Button>
-                </div>
+                <EmailToolbar messageId={email.emailHeader.messageID} handleTrash={handleTrash}/>
                 <table className={"email-headers"}>
                     <tbody>
                     <tr className={"email-subject"}>

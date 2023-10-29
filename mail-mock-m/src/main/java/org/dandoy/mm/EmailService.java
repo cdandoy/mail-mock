@@ -4,20 +4,23 @@ import com.icegreen.greenmail.imap.ImapHostManager;
 import com.icegreen.greenmail.store.StoredMessage;
 import com.icegreen.greenmail.util.GreenMail;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MediaType;
 import io.micronaut.http.exceptions.HttpStatusException;
 import io.micronaut.http.server.types.files.StreamedFile;
 import io.micronaut.scheduling.annotation.Scheduled;
 import jakarta.inject.Singleton;
 import jakarta.mail.Flags;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static io.micronaut.http.MediaType.APPLICATION_OCTET_STREAM_TYPE;
 import static org.dandoy.mm.ParsedMimeMessage.getMessageID;
 
 @Singleton
@@ -164,10 +167,26 @@ public class EmailService {
                 .filter(attachment -> filename.equals(attachment.filename()))
                 .map(attachment -> new StreamedFile(
                                 new ByteArrayInputStream(attachment.content()),
-                                MediaType.APPLICATION_OCTET_STREAM_TYPE
+                                APPLICATION_OCTET_STREAM_TYPE
                         ).attach(attachment.filename())
                 )
                 .findFirst()
                 .orElseThrow(() -> new HttpStatusException(HttpStatus.NOT_FOUND, "File not found: %s:%s".formatted(messageId, filename)));
+    }
+
+    public StreamedFile content(String messageId) {
+        return storedMessageStream(messageId)
+                .map(storedMessage -> {
+                    try {
+                        MimeMessage mimeMessage = storedMessage.getMimeMessage();
+                        InputStream rawInputStream = mimeMessage.getRawInputStream();
+                        return new StreamedFile(rawInputStream, APPLICATION_OCTET_STREAM_TYPE)
+                                .attach("%s.txt".formatted(messageId));
+                    } catch (MessagingException e) {
+                        throw new HttpStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Could not get the content of message " + messageId);
+                    }
+                })
+                .findFirst()
+                .orElseThrow(() -> new HttpStatusException(HttpStatus.NOT_FOUND, "Message not found: %s" + messageId));
     }
 }

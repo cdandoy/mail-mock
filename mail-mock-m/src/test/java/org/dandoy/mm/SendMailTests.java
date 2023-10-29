@@ -26,16 +26,16 @@ public class SendMailTests {
 
     @Disabled("For manual tests only")
     @Test
-    void testMany() throws InterruptedException {
+    void sendMany() throws InterruptedException {
         for (int i = 0; i < 10; i++) {
-            testOne();
+            sendOne();
             Thread.sleep(2000);
         }
     }
 
     @Disabled("For manual tests only")
     @Test
-    void testOne() {
+    void sendOne() {
         doit(
                 capitalize(randomWords(5)),
                 randomEmail(),

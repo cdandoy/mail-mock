@@ -55,4 +55,9 @@ public class EmailController {
     public StreamedFile attachment(@PathVariable String id, @PathVariable String filename) {
         return emailService.attachment(id, filename);
     }
+
+    @Get("content/{id}")
+    public StreamedFile content(@PathVariable String id) {
+        return emailService.content(id);
+    }
 }
