@@ -6,6 +6,7 @@ import io.micronaut.context.annotation.Context;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
+import jakarta.mail.Session;
 import lombok.Getter;
 
 import static com.icegreen.greenmail.util.ServerSetup.*;
@@ -36,5 +37,9 @@ public class GreenMailService {
     @PreDestroy
     void preDestroy() {
         greenMail.stop();
+    }
+
+    Session createSession() {
+        return greenMail.getSmtp().createSession();
     }
 }

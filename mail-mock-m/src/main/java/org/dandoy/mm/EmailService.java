@@ -9,12 +9,14 @@ import io.micronaut.http.server.types.files.StreamedFile;
 import io.micronaut.scheduling.annotation.Scheduled;
 import jakarta.inject.Singleton;
 import jakarta.mail.Flags;
-import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
 import jakarta.mail.internet.MimeMessage;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Stream;
@@ -176,16 +178,27 @@ public class EmailService {
     public StreamedFile content(String messageId) {
         return storedMessageStream(messageId)
                 .map(storedMessage -> {
-                    try {
-                        MimeMessage mimeMessage = storedMessage.getMimeMessage();
-                        InputStream rawInputStream = mimeMessage.getRawInputStream();
-                        return new StreamedFile(rawInputStream, APPLICATION_OCTET_STREAM_TYPE)
-                                .attach("%s.txt".formatted(messageId));
-                    } catch (MessagingException e) {
-                        throw new HttpStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Could not get the content of message " + messageId);
-                    }
+                    MimeMessage mimeMessage = storedMessage.getMimeMessage();
+                    return new StreamedFile(toInputStream(mimeMessage), APPLICATION_OCTET_STREAM_TYPE)
+                            .attach("%s.eml".formatted(messageId));
                 })
                 .findFirst()
                 .orElseThrow(() -> new HttpStatusException(HttpStatus.NOT_FOUND, "Message not found: %s" + messageId));
+    }
+
+    @SneakyThrows
+    private static InputStream toInputStream(MimeMessage mimeMessage) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            mimeMessage.writeTo(byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            return new ByteArrayInputStream(byteArray);
+        }
+    }
+
+    @SneakyThrows
+    public void upload(InputStream elmInputStream) {
+        Session session = greenMailService.createSession();
+        MimeMessage mimeMessage = new MimeMessage(session, elmInputStream);
+        Transport.send(mimeMessage);
     }
 }

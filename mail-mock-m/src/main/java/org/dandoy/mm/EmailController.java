@@ -2,10 +2,13 @@ package org.dandoy.mm;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.*;
+import io.micronaut.http.multipart.CompletedFileUpload;
 import io.micronaut.http.server.types.files.StreamedFile;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Controller("/emails")
@@ -59,5 +62,14 @@ public class EmailController {
     @Get("content/{id}")
     public StreamedFile content(@PathVariable String id) {
         return emailService.content(id);
+    }
+
+    @Get("upload")
+    public void upload(CompletedFileUpload fileUpload) {
+        try (BufferedInputStream inputStream = new BufferedInputStream(fileUpload.getInputStream())) {
+            emailService.upload(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

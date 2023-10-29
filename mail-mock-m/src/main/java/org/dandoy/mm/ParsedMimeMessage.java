@@ -80,7 +80,7 @@ public class ParsedMimeMessage {
                     htmlContent = text;
                     htmlContentType = contentType;
                 }
-            } else if (contentType.startsWith("multipart/mixed")) {
+            } else if (contentType.startsWith("multipart/mixed") || contentType.startsWith("multipart/alternative")) {
                 if (content instanceof MimeMultipart multipart) {
                     for (int i = 0; i < multipart.getCount(); i++) {
                         BodyPart bodyPart = multipart.getBodyPart(i);
