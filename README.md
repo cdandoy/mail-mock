@@ -8,6 +8,8 @@ MailMock is an email server and a Web based email client running in a Docker ima
 This is typically used by developers and QA engineers to visualize the emails sent by their application.
 
 <img src="site/screenshot1.png" alt="screenshot">
+<hr/>
+<img src="site/screenshot2.png" alt="screenshot">
 
 ## Port numbers
 
