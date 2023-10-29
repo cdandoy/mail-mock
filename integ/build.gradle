@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.dandoy.mminteg'
+version = 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.28")
+
+    compileOnly("org.projectlombok:lombok:1.18.28")
+    implementation 'org.seleniumhq.selenium:selenium-java:4.14.0'
+    implementation 'com.sun.mail:jakarta.mail:2.0.1'
+    testCompileOnly("org.projectlombok:lombok:1.18.28")
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    implementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+}
+
+test {
+    useJUnitPlatform()
+}

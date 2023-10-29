@@ -31,7 +31,7 @@ function Header({selectedMessageIds, deleteAll, deleteSelected, search, setSearc
                 Delete
             </Button>
 
-            <Button className={"inbox-delete"}
+            <Button className={"inbox-purge"}
                     variant={"danger"}
                     size={"sm"}
                     title={"Delete"}
