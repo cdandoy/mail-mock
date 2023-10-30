@@ -70,10 +70,10 @@ export function EmailComponent() {
     if (!email) return <div><i className={"fa fa-2x fa-error"}/> Email not found </div>
 
     return (
-        <>
+        <div id={"email"}>
             <TopHeader toolbar={<EmailToolbar/>}/>
             {error && <div className={"alert alert-danger"}>{error}</div>}
-            <div id={"email"}>
+            <div id={"email-container"}>
 
                 <table className={"email-headers"}>
                     <tbody>
@@ -129,6 +129,6 @@ export function EmailComponent() {
                     )}
                 </div>
             </div>
-        </>
+        </div>
     );
 }
