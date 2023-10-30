@@ -1,5 +1,5 @@
 import {Button} from "react-bootstrap";
-import React, {useCallback, useMemo} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {DropzoneRootProps, useDropzone} from 'react-dropzone'
 
 import "./UploadComponent.scss"
@@ -37,18 +37,12 @@ const rejectStyle = {
 
 export function UploadComponent() {
     const navigate = useNavigate();
+    const [error, setError] = useState("");
     const onDrop = useCallback((acceptedFiles: File[]) => {
-        let formData = new FormData();
-        let file = acceptedFiles[0];
-        formData.append('file', file);
-        axios.post('/emails/upload', formData)
-            .then(() => {
-                navigate('/')
-            })
-            .catch(() => {
-                console.log("Not ok")
-            });
-    }, [navigate])
+        handleFile(acceptedFiles[0])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     const {
         getRootProps,
         getInputProps,
@@ -70,6 +64,19 @@ export function UploadComponent() {
         isDragReject,
     ]);
 
+    function handleFile(file: File) {
+        let formData = new FormData();
+        formData.append('file', file);
+        setError("")
+        axios.post('/emails/upload', formData)
+            .then(() => {
+                navigate('/')
+            })
+            .catch(() => {
+                setError("Failed to upload the file");
+            });
+    }
+
     function Toolbar() {
         return <Button href="#/" variant={"primary"} size={"sm"} title={"Inbox"} className={"email-toolbar-back"}>
             <i className={"fa fa-fw fa-arrow-left"}/>
@@ -78,14 +85,17 @@ export function UploadComponent() {
     }
 
     return (
-        <>
+        <div id={"upload"}>
             <TopHeader toolbar={<Toolbar/>}/>
             <div className="container">
+                {error && <div className={"alert alert-danger"}>{error}</div>}
                 <div {...getRootProps({style})}>
                     <input {...getInputProps()} />
-                    <p>Drag 'n' drop some files here, or click to select files</p>
+                    <p>
+                        Drop your .eml file here
+                    </p>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
