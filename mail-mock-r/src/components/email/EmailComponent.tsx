@@ -86,14 +86,24 @@ export function EmailComponent() {
                         <td>From:</td>
                         <td>{emailAddress(email.emailHeader.from)}</td>
                     </tr>
-                    <tr className={"email-to"}>
-                        <td>To:</td>
-                        <td>{email.emailHeader.to?.map(emailAddress)}</td>
-                    </tr>
-                    <tr className={"email-cc"}>
-                        <td>CC:</td>
-                        <td>{email.emailHeader.cc?.map(emailAddress)}</td>
-                    </tr>
+                    {email.emailHeader.to &&
+                        <tr className={"email-to"}>
+                            <td>To:</td>
+                            <td>{email.emailHeader.to?.map(emailAddress)}</td>
+                        </tr>
+                    }
+                    {email.emailHeader.cc &&
+                        <tr className={"email-cc"}>
+                            <td>CC:</td>
+                            <td>{email.emailHeader.cc?.map(emailAddress)}</td>
+                        </tr>
+                    }
+                    {email.emailHeader.sent &&
+                        <tr className={"email-sent"}>
+                            <td>Sent:</td>
+                            <td>{new Date(email.emailHeader.sent).toLocaleString()}</td>
+                        </tr>
+                    }
                     <tr>
                         <td></td>
                         <td className={"email-attachments"}>

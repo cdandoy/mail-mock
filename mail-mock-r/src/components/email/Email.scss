@@ -1,24 +1,6 @@
 #email {
   padding: 16px;
 
-  .email-toolbar {
-    display: flex;
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #eee;
-
-    .email-toolbar-start {
-      flex-grow: 1;
-
-      a, button {
-        margin-right: 8px;
-      }
-    }
-
-    .email-toolbar-end {
-    }
-  }
-
   .email-headers {
     tr:not(.email-subject) {
       td:nth-child(1) {
