@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.micronaut.http.MediaType.APPLICATION_OCTET_STREAM_TYPE;
@@ -196,9 +197,20 @@ public class EmailService {
     }
 
     @SneakyThrows
-    public void upload(InputStream elmInputStream) {
+    public String upload(InputStream elmInputStream) {
         Session session = greenMailService.createSession();
         MimeMessage mimeMessage = new MimeMessage(session, elmInputStream);
+        // Get the known message IDs before we ingest the email.
+        Set<String> messageIdsBefore = storedMessageStream()
+                .map(it -> getMessageID(it.getMimeMessage()))
+                .collect(Collectors.toSet());
         Transport.send(mimeMessage);
+        // Find the first message that we didn't know
+        return storedMessageStream()
+                .map(it -> getMessageID(it.getMimeMessage()))
+                .filter(it -> !messageIdsBefore.contains(it))
+                .findFirst()
+                .orElse(null);
+
     }
 }

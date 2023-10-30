@@ -1,4 +1,4 @@
-import {Button} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import React, {useCallback, useMemo, useState} from "react";
 import {DropzoneRootProps, useDropzone} from 'react-dropzone'
 
@@ -35,9 +35,14 @@ const rejectStyle = {
     borderColor: '#ff1744'
 };
 
+interface UploadResponse {
+    messageId?: string;
+}
+
 export function UploadComponent() {
     const navigate = useNavigate();
     const [error, setError] = useState("");
+    const [multipart, setMultipart] = useState("");
     const onDrop = useCallback((acceptedFiles: File[]) => {
         handleFile(acceptedFiles[0])
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,12 +73,27 @@ export function UploadComponent() {
         let formData = new FormData();
         formData.append('file', file);
         setError("")
-        axios.post('/emails/upload', formData)
-            .then(() => {
-                navigate('/')
+        axios.post<UploadResponse>('/emails/upload', formData)
+            .then(result => {
+                let messageId = result.data.messageId;
+                if (messageId) navigate(`/email/${messageId}`)
+                else navigate('/')
             })
             .catch(() => {
-                setError("Failed to upload the file");
+                setError("Failed to parse the uploaded email");
+            });
+    }
+
+    function handleText() {
+        setError("")
+        axios.post<UploadResponse>('/emails/upload-text', {multipart})
+            .then(result => {
+                let messageId = result.data.messageId;
+                if (messageId) navigate(`/email/${messageId}`)
+                else navigate('/')
+            })
+            .catch(() => {
+                setError("Failed to parse the uploaded email");
             });
     }
 
@@ -91,10 +111,28 @@ export function UploadComponent() {
                 {error && <div className={"alert alert-danger"}>{error}</div>}
                 <div {...getRootProps({style})}>
                     <input {...getInputProps()} />
-                    <p>
-                        Drop your .eml file here
-                    </p>
+                    <ul>
+                        <li>Drop your .eml file here</li>
+                        <li>or click to select a file on your file system</li>
+                        <li>or enter the multi-part text below</li>
+                    </ul>
                 </div>
+                <Form>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Multi-part</Form.Label>
+                        <Form.Control className={"multipart"}
+                                      as="textarea"
+                                      rows={20}
+                                      placeholder={`Date: ${new Date()}\nFrom: Netflix <info@members.netflix.com>\nTo: netflix@example.com\nSubject: John, we just added a docuseries you might like`}
+                                      onChange={e=>setMultipart(e.target.value)}
+                                      value={multipart}
+                        />
+                    </Form.Group>
+                    <Button variant="primary" onClick={handleText}>
+                        Submit
+                    </Button>
+                </Form>
+
             </div>
         </div>
     );

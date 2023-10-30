@@ -4,4 +4,10 @@
   .container {
     margin-top: 1em;
   }
+  textarea.multipart::placeholder {
+    opacity: .4;
+  }
+  textarea.multipart:focus::placeholder {
+    opacity: 0;
+  }
 }

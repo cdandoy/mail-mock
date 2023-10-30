@@ -1,15 +1,18 @@
 package org.dandoy.mm;
 
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import io.micronaut.http.exceptions.HttpStatusException;
 import io.micronaut.http.multipart.CompletedFileUpload;
 import io.micronaut.http.server.types.files.StreamedFile;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller("/emails")
@@ -65,13 +68,32 @@ public class EmailController {
         return emailService.content(id);
     }
 
+    @Serdeable
+    public record UploadResponse(String messageId) {}
+
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Post("upload")
-    public void upload(CompletedFileUpload file) {
+    public UploadResponse upload(CompletedFileUpload file) {
         try (BufferedInputStream inputStream = new BufferedInputStream(file.getInputStream())) {
-            emailService.upload(inputStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            String messageId = emailService.upload(inputStream);
+            return new UploadResponse(messageId);
+        } catch (Exception e) {
+            log.error("Failed to parse the uploaded email", e);
+            throw new HttpStatusException(HttpStatus.BAD_REQUEST, "Could not parse the message");
+        }
+    }
+
+    @Serdeable
+    public record UploadTextRequest(String multipart) {}
+
+    @Post("upload-text")
+    public UploadResponse upload(@Body UploadTextRequest uploadTextRequest) {
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(uploadTextRequest.multipart.getBytes(StandardCharsets.UTF_8))) {
+            String messageId = emailService.upload(inputStream);
+            return new UploadResponse(messageId);
+        } catch (Exception e) {
+            log.error("Failed to parse the uploaded email", e);
+            throw new HttpStatusException(HttpStatus.BAD_REQUEST, "Could not parse the message");
         }
     }
 }
