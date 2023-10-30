@@ -1,12 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400&display=swap');
+
 #upload {
   padding: 16px;
 
   .container {
     margin-top: 1em;
   }
-  textarea.multipart::placeholder {
-    opacity: .4;
+
+  textarea.multipart {
+    font-family: "JetBrains Mono Light", "Courier New", monospace;
+    font-size: 70%;
   }
+
+  textarea.multipart::placeholder {
+    opacity: .5;
+  }
+
   textarea.multipart:focus::placeholder {
     opacity: 0;
   }
