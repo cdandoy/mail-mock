@@ -5,6 +5,7 @@ import {DropzoneRootProps, useDropzone} from 'react-dropzone'
 import "./UploadComponent.scss"
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {TopHeader} from "../topheader/TopHeader";
 
 const baseStyle = {
     flex: 1,
@@ -69,19 +70,16 @@ export function UploadComponent() {
         isDragReject,
     ]);
 
+    function Toolbar() {
+        return <Button href="#/" variant={"primary"} size={"sm"} title={"Inbox"} className={"email-toolbar-back"}>
+            <i className={"fa fa-fw fa-arrow-left"}/>
+            Back
+        </Button>
+    }
 
     return (
         <>
-            <div id={"upload"}>
-                <div className={"upload-toolbar"}>
-                    <div className={"upload-toolbar-start"}>
-                        <Button href="#/" variant={"light"} size={"sm"} title={"Inbox"} className={"email-toolbar-back"}>
-                            <i className={"fa fa-fw fa-arrow-left"}/>
-                        </Button>
-                        <h4>Upload EML file</h4>
-                    </div>
-                </div>
-            </div>
+            <TopHeader toolbar={<Toolbar/>}/>
             <div className="container">
                 <div {...getRootProps({style})}>
                     <input {...getInputProps()} />
@@ -89,6 +87,5 @@ export function UploadComponent() {
                 </div>
             </div>
         </>
-
     );
 }
