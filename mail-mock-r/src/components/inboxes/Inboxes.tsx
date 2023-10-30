@@ -2,55 +2,12 @@ import React, {useEffect, useReducer, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import './Inboxes.scss'
-import {Button} from "react-bootstrap";
+import {Button, Dropdown} from "react-bootstrap";
 import {EmailHeader} from "../../model";
 import {useEmailWebsocket} from "../../EmailWebsocket";
 import {NoMails} from "./NoMails";
-import Form from 'react-bootstrap/Form';
 import {useSessionStorage} from "usehooks-ts";
-
-interface HeaderProps {
-    selectedMessageIds: string[],
-    deleteAll: () => void,
-    deleteSelected: () => void,
-    search: string,
-    setSearch: (search: string) => void,
-}
-
-function Header({selectedMessageIds, deleteAll, deleteSelected, search, setSearch}: HeaderProps) {
-    const hasSelection = selectedMessageIds.length > 0;
-
-    return <div className={"inbox-header"}>
-        <div className={"inbox-header-left"}>
-            <Button className={"inbox-delete"}
-                    variant={hasSelection ? "danger" : "secondary"}
-                    size={"sm"}
-                    title={"Delete"}
-                    onClick={deleteSelected}
-                    disabled={!hasSelection}>
-                Delete
-            </Button>
-
-            <Button className={"inbox-purge"}
-                    variant={"danger"}
-                    size={"sm"}
-                    title={"Delete"}
-                    onClick={deleteAll}>
-                Purge
-            </Button>
-            <Button className={"inbox-upload"}
-                    variant={""}
-                    size={"sm"}
-                    title={"Upload"}
-                    href={"#upload"}>
-                <i className={"fa fa-upload"}/>
-            </Button>
-        </div>
-        <div className={"inbox-header-right"}>
-            <Form.Control type="search" spellCheck="false" placeholder="Search" value={search} onChange={e => setSearch(e.target.value.toLowerCase())}/>
-        </div>
-    </div>
-}
+import {TopHeader} from "../topheader/TopHeader";
 
 export function Inboxes() {
     const navigate = useNavigate();
@@ -61,6 +18,30 @@ export function Inboxes() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const emailWebsocketState = useEmailWebsocket();
+
+    function Toolbar() {
+        return <>
+            {selectedMessageIds.length > 0 &&
+                <Button variant={"danger"} size={"sm"} onClick={deleteSelected}>
+                    <i className={"fa fa-trash"}/>
+                    Delete
+                </Button>
+            }
+        </>
+    }
+
+    function Menu() {
+        return <>
+            <Dropdown.Item onClick={deleteAll}>
+                {/*<i className={"fa fa-fw fa-exclamation-triangle"}/>&nbsp;*/}
+                Purge
+            </Dropdown.Item>
+            <Dropdown.Item href={"#upload"}>
+                {/*<i className={"fa fa-fw fa-upload"}/>&nbsp;*/}
+                Upload
+            </Dropdown.Item>
+        </>;
+    }
 
     useEffect(() => {
         setLoading(true);
@@ -153,7 +134,10 @@ export function Inboxes() {
                 </div>
             </div>}
 
-            <Header selectedMessageIds={selectedMessageIds} deleteAll={deleteAll} deleteSelected={deleteSelected} search={search} setSearch={setSearch}/>
+            <TopHeader toolbar={<Toolbar/>}
+                       menu={<Menu/>}
+                       search={search}
+                       setSearch={setSearch}/>
 
             {filteredEmails.length === 0 ?
                 <NoMails search={search}/>

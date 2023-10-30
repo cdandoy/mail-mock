@@ -15,21 +15,23 @@ function EmailToolbar({messageId, handleTrash}: EmailToolbarProps) {
     const contentUrl = `${prefix}/emails/content/${(encodeURIComponent(messageId))}`;
 
     return (
-        <div className={"email-toolbar"}>
-            <div className={"email-toolbar-start"}>
-                <Button href="#/" variant={"light"} size={"sm"} title={"Inbox"} className={"email-toolbar-back"}>
-                    <i className={"fa fa-fw fa-arrow-left"}/>
-                </Button>
-                <Button variant={"light"} size={"sm"} onClick={handleTrash} title={"Delete"} className={"email-toolbar-trash"}>
-                    <i className={"fa fa-fw fa-trash"}/>
-                </Button>
+        <>
+            <div className={"email-toolbar"}>
+                <div className={"email-toolbar-start"}>
+                    <Button href="#/" variant={"light"} size={"sm"} title={"Inbox"} className={"email-toolbar-back"}>
+                        <i className={"fa fa-fw fa-arrow-left"}/>
+                    </Button>
+                    <Button variant={"light"} size={"sm"} onClick={handleTrash} title={"Delete"} className={"email-toolbar-trash"}>
+                        <i className={"fa fa-fw fa-trash"}/>
+                    </Button>
+                </div>
+                <div className={"email-toolbar-end"}>
+                    <Button href={contentUrl} variant={"light"} size={"sm"} title={"Download Content"} className={"email-toolbar-download"}>
+                        <i className={"fa fa-fw fa-download"}/>
+                    </Button>
+                </div>
             </div>
-            <div className={"email-toolbar-end"}>
-                <Button href={contentUrl} variant={"light"} size={"sm"} title={"Download Content"} className={"email-toolbar-download"}>
-                    <i className={"fa fa-fw fa-download"}/>
-                </Button>
-            </div>
-        </div>
+        </>
     )
 }
 
