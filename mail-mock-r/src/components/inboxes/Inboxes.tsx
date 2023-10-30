@@ -38,6 +38,13 @@ function Header({selectedMessageIds, deleteAll, deleteSelected, search, setSearc
                     onClick={deleteAll}>
                 Purge
             </Button>
+            <Button className={"inbox-upload"}
+                    variant={""}
+                    size={"sm"}
+                    title={"Upload"}
+                    href={"#upload"}>
+                <i className={"fa fa-upload"}/>
+            </Button>
         </div>
         <div className={"inbox-header-right"}>
             <Form.Control type="search" spellCheck="false" placeholder="Search" value={search} onChange={e => setSearch(e.target.value.toLowerCase())}/>

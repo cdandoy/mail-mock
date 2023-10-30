@@ -1,0 +1,25 @@
+#upload {
+  padding: 16px;
+
+  .upload-toolbar {
+    display: flex;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+
+    .upload-toolbar-start {
+      flex-grow: 1;
+
+      a, button {
+        margin-right: 8px;
+      }
+
+      h4 {
+        display: inline;
+      }
+    }
+
+    .upload-toolbar-end {
+    }
+  }
+}

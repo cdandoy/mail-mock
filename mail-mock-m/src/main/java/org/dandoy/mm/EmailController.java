@@ -1,6 +1,7 @@
 package org.dandoy.mm;
 
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import io.micronaut.http.multipart.CompletedFileUpload;
 import io.micronaut.http.server.types.files.StreamedFile;
@@ -64,9 +65,10 @@ public class EmailController {
         return emailService.content(id);
     }
 
-    @Get("upload")
-    public void upload(CompletedFileUpload fileUpload) {
-        try (BufferedInputStream inputStream = new BufferedInputStream(fileUpload.getInputStream())) {
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Post("upload")
+    public void upload(CompletedFileUpload file) {
+        try (BufferedInputStream inputStream = new BufferedInputStream(file.getInputStream())) {
             emailService.upload(inputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
