@@ -33,12 +33,17 @@ export function Inboxes() {
     function Menu() {
         return <>
             <Dropdown.Item onClick={deleteAll}>
-                {/*<i className={"fa fa-fw fa-exclamation-triangle"}/>&nbsp;*/}
+                <i className={"fa fa-fw fa-exclamation-triangle"}/>&nbsp;
                 Purge
             </Dropdown.Item>
             <Dropdown.Item href={"#upload"}>
-                {/*<i className={"fa fa-fw fa-upload"}/>&nbsp;*/}
+                <i className={"fa fa-fw fa-upload"}/>&nbsp;
                 Upload
+            </Dropdown.Item>
+            <Dropdown.Divider/>
+            <Dropdown.Item href={"https://github.com/cdandoy/mail-mock"} target={"_blank"}>
+                <i className={"fa-brands fa-fw fa-github"}/>&nbsp;
+                GitHub
             </Dropdown.Item>
         </>;
     }
