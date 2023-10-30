@@ -4,36 +4,7 @@ import axios from "axios";
 import './Email.scss'
 import {Email} from "../../model";
 import {Button} from "react-bootstrap";
-
-interface EmailToolbarProps {
-    messageId: string,
-    handleTrash: React.MouseEventHandler<HTMLButtonElement>
-}
-
-function EmailToolbar({messageId, handleTrash}: EmailToolbarProps) {
-    const prefix = document.URL.startsWith("http://localhost:3000") ? `http://localhost:${process.env.REACT_APP_MM_BACKEND_PORT}` : "";
-    const contentUrl = `${prefix}/emails/content/${(encodeURIComponent(messageId))}`;
-
-    return (
-        <>
-            <div className={"email-toolbar"}>
-                <div className={"email-toolbar-start"}>
-                    <Button href="#/" variant={"light"} size={"sm"} title={"Inbox"} className={"email-toolbar-back"}>
-                        <i className={"fa fa-fw fa-arrow-left"}/>
-                    </Button>
-                    <Button variant={"light"} size={"sm"} onClick={handleTrash} title={"Delete"} className={"email-toolbar-trash"}>
-                        <i className={"fa fa-fw fa-trash"}/>
-                    </Button>
-                </div>
-                <div className={"email-toolbar-end"}>
-                    <Button href={contentUrl} variant={"light"} size={"sm"} title={"Download Content"} className={"email-toolbar-download"}>
-                        <i className={"fa fa-fw fa-download"}/>
-                    </Button>
-                </div>
-            </div>
-        </>
-    )
-}
+import {TopHeader} from "../topheader/TopHeader";
 
 export function EmailComponent() {
     let {messageId} = useParams();
@@ -41,6 +12,28 @@ export function EmailComponent() {
     const [email, setEmail] = useState<Email | undefined>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
+    function EmailToolbar() {
+        const prefix = document.URL.startsWith("http://localhost:3000") ? `http://localhost:${process.env.REACT_APP_MM_BACKEND_PORT}` : "";
+        const contentUrl = `${prefix}/emails/content/${(encodeURIComponent(messageId || ''))}`;
+
+        return (
+            <>
+                <Button href="#/" variant={"primary"} size={"sm"} title={"Inbox"} className={"email-toolbar-back"}>
+                    <i className={"fa fa-fw fa-arrow-left"}/>
+                    Back
+                </Button>
+                <Button variant={"danger"} size={"sm"} onClick={handleTrash} title={"Delete"} className={"email-toolbar-trash"}>
+                    <i className={"fa fa-fw fa-trash"}/>
+                    Delete
+                </Button>
+                <Button href={contentUrl} variant={"primary"} size={"sm"} title={"Download Content"} className={"email-toolbar-download"}>
+                    <i className={"fa fa-fw fa-download"}/>
+                    Download
+                </Button>
+            </>
+        )
+    }
 
     useEffect(() => {
         setLoading(true);
@@ -78,9 +71,10 @@ export function EmailComponent() {
 
     return (
         <>
+            <TopHeader toolbar={<EmailToolbar/>}/>
             {error && <div className={"alert alert-danger"}>{error}</div>}
             <div id={"email"}>
-                <EmailToolbar messageId={email.emailHeader.messageID} handleTrash={handleTrash}/>
+
                 <table className={"email-headers"}>
                     <tbody>
                     <tr className={"email-subject"}>
