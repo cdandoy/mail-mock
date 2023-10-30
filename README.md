@@ -10,6 +10,8 @@ This is typically used by developers and QA engineers to visualize the emails se
 <img src="site/screenshot1.png" alt="screenshot">
 <hr/>
 <img src="site/screenshot2.png" alt="screenshot">
+<hr/>
+<img src="site/screenshot3.png" alt="screenshot">
 
 ## Port numbers
 
