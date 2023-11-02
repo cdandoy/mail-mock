@@ -129,7 +129,8 @@ export function UploadComponent() {
                         />
                     </Form.Group>
                     <Button variant="primary" onClick={handleText}>
-                        Submit
+                        <i className={"fa fa-fw fa-upload"}/>&nbsp;
+                        Upload
                     </Button>
                 </Form>
 
