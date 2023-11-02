@@ -15,7 +15,7 @@ export function EmailComponent() {
 
     function EmailToolbar() {
         const prefix = document.URL.startsWith("http://localhost:3000") ? `http://localhost:${process.env.REACT_APP_MM_BACKEND_PORT}` : "";
-        const contentUrl = `${prefix}/emails/content/${(encodeURIComponent(messageId || ''))}`;
+        const originalUrl = `${prefix}/emails/original/${(encodeURIComponent(messageId || ''))}`;
 
         return (
             <>
@@ -27,9 +27,9 @@ export function EmailComponent() {
                     <i className={"fa fa-fw fa-trash"}/>
                     Delete
                 </Button>
-                <Button href={contentUrl} variant={"primary"} size={"sm"} title={"Download Content"} className={"email-toolbar-download"}>
-                    <i className={"fa fa-fw fa-download"}/>
-                    Download
+                <Button href={originalUrl} target={"_blank"} variant={"primary"} size={"sm"} title={"Inbox"} className={"email-toolbar-back"}>
+                    <i className={"fa fa-fw fa-code"}/>
+                    Original
                 </Button>
             </>
         )
@@ -73,7 +73,7 @@ export function EmailComponent() {
         <div id={"email"}>
             <TopHeader toolbar={<EmailToolbar/>}/>
             {error && <div className={"alert alert-danger"}>{error}</div>}
-            <div id={"email-container"}>
+            <div className={"email-container"}>
 
                 <table className={"email-headers"}>
                     <tbody>

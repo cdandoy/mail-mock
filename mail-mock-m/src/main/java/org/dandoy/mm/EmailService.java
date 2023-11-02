@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.micronaut.http.MediaType.APPLICATION_OCTET_STREAM_TYPE;
+import static io.micronaut.http.MediaType.TEXT_PLAIN_TYPE;
 import static org.dandoy.mm.ParsedMimeMessage.getMessageID;
 
 @Singleton
@@ -176,12 +177,11 @@ public class EmailService {
                 .orElseThrow(() -> new HttpStatusException(HttpStatus.NOT_FOUND, "File not found: %s:%s".formatted(messageId, filename)));
     }
 
-    public StreamedFile content(String messageId) {
+    public StreamedFile original(String messageId) {
         return storedMessageStream(messageId)
                 .map(storedMessage -> {
                     MimeMessage mimeMessage = storedMessage.getMimeMessage();
-                    return new StreamedFile(toInputStream(mimeMessage), APPLICATION_OCTET_STREAM_TYPE)
-                            .attach("%s.eml".formatted(messageId));
+                    return new StreamedFile(toInputStream(mimeMessage), TEXT_PLAIN_TYPE);
                 })
                 .findFirst()
                 .orElseThrow(() -> new HttpStatusException(HttpStatus.NOT_FOUND, "Message not found: %s" + messageId));

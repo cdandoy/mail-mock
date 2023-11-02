@@ -63,9 +63,9 @@ public class EmailController {
         return emailService.attachment(id, filename);
     }
 
-    @Get("content/{id}")
-    public StreamedFile content(@PathVariable String id) {
-        return emailService.content(id);
+    @Get("original/{id}")
+    public StreamedFile original(@PathVariable String id) {
+        return emailService.original(id);
     }
 
     @Serdeable
